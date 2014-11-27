@@ -1,7 +1,9 @@
+var root = '../modules/';
+
 define(['jquery',
         'mustache',
-        'text!../modules/geobricks_ui_download_modis/html/templates.html',
-        'i18n!../modules/geobricks_ui_download_modis/nls/translate',
+        'text!' + root + 'geobricks_ui_download_progress/html/templates.html',
+        'i18n!' + root + 'geobricks_ui_download_progress/nls/translate',
         'bootstrap'], function ($, Mustache, templates, translate) {
 
     'use strict';
@@ -10,9 +12,7 @@ define(['jquery',
 
         this.CONFIG = {
             lang: 'en',
-            placeholder_id: 'placeholder',
-            url_countries: 'http://localhost:5555/browse/modis/countries/',
-            url_products: 'http://localhost:5555/browse/modis/'
+            placeholder_id: 'placeholder'
         };
 
     }
