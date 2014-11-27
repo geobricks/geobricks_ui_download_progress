@@ -1,4 +1,4 @@
-geobricks_ui_download_progress
+Geobricks UI Download Progress
 ==============================
 
-Geobricks user interface: download progress module.
+This module shows to the user the progress of the download threads.
