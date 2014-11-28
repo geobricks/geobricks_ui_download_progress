@@ -1,7 +1,7 @@
 <template id='tab_header'>
     <li>
         <a href='#{{href}}' role='tab' data-toggle='tab'>
-            <i class='fa fa-calendar'></i> {{tab_label}}
+            <i class='fa fa-signal'></i> {{tab_label}}
         </a>
     </li>
 </template>
@@ -16,7 +16,7 @@
     <div class='row' style='margin-top: 16px;'>
         <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
             <div class='progress'>
-                <div class='progress-bar' role='progressbar' aria-valuenow='60' aria-valuemin='0' aria-valuemax='100' style='width: 60%;'>
+                <div id='{{progress_id}}' class='progress-bar' role='progressbar' aria-valuenow='60' aria-valuemin='0' aria-valuemax='100' style='width: 60%;'>
                     60%
                 </div>
             </div>

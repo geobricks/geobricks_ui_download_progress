@@ -65,13 +65,15 @@ define(['jquery',
         /* Create a progress bar for each file to be downloaded. */
         for (var i = 0 ; i < this.CONFIG.files_to_be_downloaded.length ; i++) {
             template = $(templates).filter('#progress').html();
-            view = {};
+            view = {
+                progress_id: this.CONFIG.files_to_be_downloaded[i].file_name
+            };
             render = Mustache.render(template, view);
             $('#' + this.CONFIG.tab_id).append(render);
         }
 
         /* Show the first tab. */
-        this.tab_headers.find('a:nth-child(1)').tab('show');
+        $(this.tab_headers.find('a')[1]).tab('show');
 
     };
 
