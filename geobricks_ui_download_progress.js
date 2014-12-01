@@ -4,11 +4,12 @@ define(['jquery',
         'mustache',
         'text!' + root + 'geobricks_ui_download_progress/html/templates.html',
         'i18n!' + root + 'geobricks_ui_download_progress/nls/translate',
+        'sweet-alert',
         'bootstrap'], function ($, Mustache, templates, translate) {
 
     'use strict';
 
-    function UI_DLWD_PROGRESSS() {
+    function UI_DLWD_PROGRESS() {
 
         this.CONFIG = {
             lang: 'en',
@@ -17,6 +18,7 @@ define(['jquery',
             tab_label: null,
             tab_id: null,
             timers_map: {},
+            progress_interval: 1000,
             url_progress: 'http://localhost:5555/download/progress/'
         };
 
@@ -27,7 +29,7 @@ define(['jquery',
      *
      * @param config Custom configuration in JSON format to extend the default settings.
      */
-    UI_DLWD_PROGRESSS.prototype.init = function(config) {
+    UI_DLWD_PROGRESS.prototype.init = function(config) {
 
         /* Extend default configuration. */
         this.CONFIG = $.extend(true, {}, this.CONFIG, config);
@@ -44,7 +46,7 @@ define(['jquery',
         
     };
 
-    UI_DLWD_PROGRESSS.prototype.create_progress_bar_tab = function() {
+    UI_DLWD_PROGRESS.prototype.create_progress_bar_tab = function() {
 
         /* Render the tab header. */
         var template = $(templates).filter('#tab_header').html();
@@ -79,7 +81,7 @@ define(['jquery',
 
     };
 
-    UI_DLWD_PROGRESSS.prototype.update_progress_bar = function(downloader_id, downloaded_file) {
+    UI_DLWD_PROGRESS.prototype.update_progress_bar = function(downloader_id, downloaded_file) {
 
         /* Create progress URL. */
         var url = this.CONFIG.url_progress + downloader_id + '/' + downloaded_file + '/';
@@ -116,24 +118,50 @@ define(['jquery',
                         try {
                             if (json.status == 'COMPLETE' || parseInt(json.progress == 100)) {
                                 clearInterval(_this.CONFIG.timers_map[json.file_name]);
+                                _this.CONFIG.timers_map[json.file_name] = null;
+                                _this.on_progress_complete(Object.keys(_this.CONFIG.timers_map));
                                 p_bar.removeClass('progress-bar-warning').addClass('progress-bar-success');
                             }
                         } catch (e) {
-
+                            sweetAlert({
+                                title: translate.error,
+                                text: e,
+                                type: 'error',
+                                confirmButtonColor: '#379BCE'
+                            });
                         }
 
                     } catch (e) {
-
+                        /* JSON is null for the first iterations: skip alert. */
                     }
 
                 }
 
             });
 
-        }, 1000);
+        }, this.CONFIG.progress_interval);
 
     };
 
-    return new UI_DLWD_PROGRESSS();
+    UI_DLWD_PROGRESS.prototype.on_progress_complete = function(filenames) {
+        var timers = Object.keys(this.CONFIG.timers_map).length;
+        var count = 0;
+        for (var key in this.CONFIG.timers_map)
+            if (this.CONFIG.timers_map[key] == null)
+                count++;
+        if (count == timers)
+            this.on_progress_complete_action(filenames);
+    };
+
+    UI_DLWD_PROGRESS.prototype.on_progress_complete_action = function(filenames) {
+        sweetAlert({
+            title: translate.operation_complete,
+            text: filenames.join('\n'),
+            type: 'info',
+            confirmButtonColor: '#379BCE'
+        });
+    };
+
+    return new UI_DLWD_PROGRESS();
     
 });
