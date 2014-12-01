@@ -119,7 +119,7 @@ define(['jquery',
                             if (json.status == 'COMPLETE') {
                                 clearInterval(_this.CONFIG.timers_map[downloaded_file]);
                                 _this.CONFIG.timers_map[downloaded_file] = null;
-                                _this.on_progress_complete(Object.keys(_this.CONFIG.timers_map));
+                                _this.on_progress_complete(json.target_dir, Object.keys(_this.CONFIG.timers_map));
                                 p_bar.removeClass('progress-bar-warning').addClass('progress-bar-success');
                             }
                         } catch (e) {
@@ -143,17 +143,17 @@ define(['jquery',
 
     };
 
-    UI_DLWD_PROGRESS.prototype.on_progress_complete = function(filenames) {
+    UI_DLWD_PROGRESS.prototype.on_progress_complete = function(target_dir, filenames) {
         var timers = Object.keys(this.CONFIG.timers_map).length;
         var count = 0;
         for (var key in this.CONFIG.timers_map)
             if (this.CONFIG.timers_map[key] == null)
                 count++;
         if (count == timers)
-            this.on_progress_complete_action(filenames);
+            this.on_progress_complete_action(target_dir, filenames);
     };
 
-    UI_DLWD_PROGRESS.prototype.on_progress_complete_action = function(filenames) {
+    UI_DLWD_PROGRESS.prototype.on_progress_complete_action = function(target_dir, filenames) {
         sweetAlert({
             title: translate.operation_complete,
             text: filenames.join('\n'),
