@@ -106,19 +106,19 @@ define(['jquery',
                         /* Update progress bar. */
                         var p = parseFloat(json.progress);
                         if (!isNaN(p)) {
-                            var p_bar = $(document.getElementById(json.file_name));
+                            var p_bar = $(document.getElementById(downloaded_file));
                             p_bar.css('width', json.progress + '%');
                             p_bar.attr('aria-valuenow', json.progress);
                             var p_report = '(' + parseFloat(json.download_size / 1000000).toFixed(2);
                             p_report += ' / ' + parseFloat(json.total_size / 1000000).toFixed(2) + ') MB';
-                            document.getElementById('download_report_' + json.file_name).innerHTML = p_report;
+                            $(document.getElementById('download_report_' + downloaded_file)).html(p_report);
                         }
 
                         /* Clear the interval when the download is complete. */
                         try {
-                            if (json.status == 'COMPLETE' || parseInt(json.progress == 100)) {
-                                clearInterval(_this.CONFIG.timers_map[json.file_name]);
-                                _this.CONFIG.timers_map[json.file_name] = null;
+                            if (json.status == 'COMPLETE') {
+                                clearInterval(_this.CONFIG.timers_map[downloaded_file]);
+                                _this.CONFIG.timers_map[downloaded_file] = null;
                                 _this.on_progress_complete(Object.keys(_this.CONFIG.timers_map));
                                 p_bar.removeClass('progress-bar-warning').addClass('progress-bar-success');
                             }
