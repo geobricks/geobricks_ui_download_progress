@@ -15,7 +15,9 @@ define(['jquery',
             placeholder_id: 'placeholder',
             files_to_be_downloaded: null,
             tab_label: null,
-            tab_id: null
+            tab_id: null,
+            timers_map: {},
+            url_progress: 'http://localhost:5555/download/progress/'
         };
 
     }
@@ -38,7 +40,6 @@ define(['jquery',
         this.tab_contents = $('#tab_contents');
 
         /* Create progress bar. */
-        console.debug(this.CONFIG.files_to_be_downloaded);
         this.create_progress_bar_tab();
         
     };
@@ -66,7 +67,8 @@ define(['jquery',
         for (var i = 0 ; i < this.CONFIG.files_to_be_downloaded.length ; i++) {
             template = $(templates).filter('#progress').html();
             view = {
-                progress_id: this.CONFIG.files_to_be_downloaded[i].file_name
+                progress_id: this.CONFIG.files_to_be_downloaded[i].file_name,
+                progress_label: this.CONFIG.files_to_be_downloaded[i].file_name
             };
             render = Mustache.render(template, view);
             $('#' + this.CONFIG.tab_id).append(render);
@@ -74,6 +76,61 @@ define(['jquery',
 
         /* Show the first tab. */
         $(this.tab_headers.find('a')[1]).tab('show');
+
+    };
+
+    UI_DLWD_PROGRESSS.prototype.update_progress_bar = function(downloader_id, downloaded_file) {
+
+        /* Create progress URL. */
+        var url = this.CONFIG.url_progress + downloader_id + '/' + downloaded_file + '/';
+        var _this = this;
+
+        /* Set monitor interval. */
+        this.CONFIG.timers_map[downloaded_file] = setInterval(function() {
+
+            $.ajax({
+
+                url: url,
+                type: 'GET',
+                success: function (response) {
+
+                    try {
+
+                        /* Cast the response to JSON, if needed. */
+                        var json = response;
+                        if (typeof json == 'string')
+                            json = $.parseJSON(response);
+
+                        /* Update progress bar. */
+                        var p = parseFloat(json.progress);
+                        if (!isNaN(p)) {
+                            var p_bar = $(document.getElementById(json.file_name));
+                            p_bar.css('width', json.progress + '%');
+                            p_bar.attr('aria-valuenow', json.progress);
+                            var p_report = '(' + parseFloat(json.download_size / 1000000).toFixed(2);
+                            p_report += ' / ' + parseFloat(json.total_size / 1000000).toFixed(2) + ') MB';
+                            document.getElementById('download_report_' + json.file_name).innerHTML = p_report;
+                        }
+
+                        /* Clear the interval when the download is complete. */
+                        try {
+                            if (json.status == 'COMPLETE' || parseInt(json.progress == 100)) {
+                                clearInterval(_this.CONFIG.timers_map[json.file_name]);
+                                p_bar.removeClass('progress-bar-warning').addClass('progress-bar-success');
+                            }
+                        } catch (e) {
+
+                        }
+
+                    } catch (e) {
+
+                    }
+
+                }
+
+            });
+
+        }, 1000);
 
     };
 

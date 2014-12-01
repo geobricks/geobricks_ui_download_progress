@@ -7,18 +7,26 @@
 </template>
 
 <template id='progress_tab_content'>
-    <div class='tab-pane' id='{{id}}'>
+    <div class='tab-pane top-space-05X' id='{{id}}'>
 
     </div>
 </template>
 
 <template id='progress'>
-    <div class='row' style='margin-top: 16px;'>
-        <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+    <div class='row'>
+        <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 top-space-05X'>
+            <label id='label_{{progress_id}}' for='{{progress_id}}'>{{progress_label}}</label>
+        </div>
+        <div class='col-xs-12 col-sm-10 col-md-10 col-lg-10'>
             <div class='progress'>
-                <div id='{{progress_id}}' class='progress-bar' role='progressbar' aria-valuenow='60' aria-valuemin='0' aria-valuemax='100' style='width: 60%;'>
-                    60%
+                <div id='{{progress_id}}' class='progress-bar progress-bar-warning' role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' style='width: 60%;'>
+
                 </div>
+            </div>
+        </div>
+        <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+            <div class='progress-report' id='download_report_{{progress_id}}'>
+                <i class='fa fa-refresh fa-spin'></i>
             </div>
         </div>
     </div>
