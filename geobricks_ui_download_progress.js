@@ -1,9 +1,7 @@
-var root = '../modules/';
-
 define(['jquery',
         'mustache',
-        'text!' + root + 'geobricks_ui_download_progress/html/templates.html',
-        'i18n!' + root + 'geobricks_ui_download_progress/nls/translate',
+        'text!geobricks_ui_download_progress/html/templates.html',
+        'i18n!geobricks_ui_download_progress/nls/translate',
         'sweet-alert',
         'bootstrap'], function ($, Mustache, templates, translate) {
 
@@ -48,9 +46,6 @@ define(['jquery',
 
     UI_DLWD_PROGRESS.prototype.create_progress_bar_tab = function() {
 
-        /* Remove old tabs. */
-        this.remove_old_tabs();
-
         /* Render the tab header. */
         var template = $(templates).filter('#tab_header').html();
         var view = {
@@ -75,6 +70,7 @@ define(['jquery',
                 progress_id: this.CONFIG.files_to_be_downloaded[i].file_name,
                 progress_label: this.CONFIG.files_to_be_downloaded[i].file_name
             };
+            console.debug(this.CONFIG.files_to_be_downloaded[i].file_name);
             render = Mustache.render(template, view);
             $('#' + this.CONFIG.tab_id).append(render);
         }
@@ -85,6 +81,8 @@ define(['jquery',
     };
 
     UI_DLWD_PROGRESS.prototype.remove_old_tabs = function() {
+        this.tab_headers = $('#tab_headers');
+        this.tab_contents = $('#tab_contents');
         var tabs_size = this.tab_headers.find('li').length;
         for (var i = tabs_size ; i >= 2 ; i--)
             this.tab_headers.find('li:nth-child(' + i + ')').remove();
@@ -174,6 +172,6 @@ define(['jquery',
         });
     };
 
-    return new UI_DLWD_PROGRESS();
+    return UI_DLWD_PROGRESS;
     
 });
