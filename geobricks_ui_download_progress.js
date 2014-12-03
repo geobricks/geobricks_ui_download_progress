@@ -48,6 +48,9 @@ define(['jquery',
 
     UI_DLWD_PROGRESS.prototype.create_progress_bar_tab = function() {
 
+        /* Remove old tabs. */
+        this.remove_old_tabs();
+
         /* Render the tab header. */
         var template = $(templates).filter('#tab_header').html();
         var view = {
@@ -79,6 +82,15 @@ define(['jquery',
         /* Show the first tab. */
         $(this.tab_headers.find('a')[1]).tab('show');
 
+    };
+
+    UI_DLWD_PROGRESS.prototype.remove_old_tabs = function() {
+        var tabs_size = this.tab_headers.find('li').length;
+        for (var i = tabs_size ; i >= 2 ; i--)
+            this.tab_headers.find('li:nth-child(' + i + ')').remove();
+        tabs_size = this.tab_contents.find('.tab-pane').length;
+        for (i = tabs_size ; i >= 2 ; i--)
+            this.tab_contents.find('.tab-pane:nth-child(' + i + ')').remove();
     };
 
     UI_DLWD_PROGRESS.prototype.update_progress_bar = function(downloader_id, downloaded_file) {
