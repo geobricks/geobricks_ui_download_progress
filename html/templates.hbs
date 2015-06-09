@@ -1,18 +1,18 @@
-<template id='tab_header'>
+<script type='text/x-handlebars-template' id='tab_header'>
     <li>
         <a href='#{{href}}' role='tab' data-toggle='tab'>
             <i class='fa fa-signal'></i> {{tab_label}}
         </a>
     </li>
-</template>
+</script>
 
-<template id='progress_tab_content'>
+<script type='text/x-handlebars-template' id='progress_tab_content'>
     <div class='tab-pane top-space-05X' id='{{id}}' style='line-height: 30px;'>
 
     </div>
-</template>
+</script>
 
-<template id='progress'>
+<script type='text/x-handlebars-template' id='progress'>
     <div class='row'>
         <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 top-space-05X'>
             <label id='label_{{progress_id}}' for='{{progress_id}}'>{{progress_label}}</label>
@@ -30,4 +30,4 @@
             </div>
         </div>
     </div>
-</template>
+</script>

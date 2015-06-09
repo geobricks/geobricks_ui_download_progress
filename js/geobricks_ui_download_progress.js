@@ -1,6 +1,6 @@
 define(['jquery',
         'mustache',
-        'text!geobricks_ui_download_progress/html/templates.html',
+        'text!geobricks_ui_download_progress/html/templates.hbs',
         'i18n!geobricks_ui_download_progress/nls/translate',
         'sweet-alert',
         'bootstrap'], function ($, Mustache, templates, translate) {
